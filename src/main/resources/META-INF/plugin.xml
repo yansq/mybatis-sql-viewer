@@ -3,9 +3,6 @@
     <name>Mybatis Sql Viewer</name>
     <vendor email="linyimin520812@gmail.com" url="https://github.com/linyimin0812">linyimin</vendor>
 
-
-    <idea-version since-build="201" />
-
     <description><![CDATA[
 
     Mybatis-SQL-Viewer is a plugin that improves the efficiency and quality of writing SQL when CRUD, supporting both mybatis and non-mybatis modes. The main functions are as follows:<br/>

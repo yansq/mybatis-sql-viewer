@@ -14,7 +14,6 @@ import java.util.Properties;
  * @date 2022/11/26 21:48
  **/
 public class DatasourceComponent {
-
     private DruidDataSource dataSource;
 
     public Connection getConnection() throws Exception {
@@ -49,12 +48,22 @@ public class DatasourceComponent {
     }
 
     private DruidDataSource createDatasource() throws Exception {
+        DatasourceConfigComponent component = ApplicationManager.getApplication()
+                .getComponent(DatasourceConfigComponent.class);
 
-        DatasourceConfigComponent component = ApplicationManager.getApplication().getComponent(DatasourceConfigComponent.class);
+        String type = component.getType();
+        if ("oracle".equals(type)) {
+            return createOracleDatasource(component);
+        } else {
+            return createMysqlDatasource(component);
+        }
+    }
 
+    private DruidDataSource createMysqlDatasource(DatasourceConfigComponent component) throws Exception {
+        String url = String.format(
+                Constant.MYSQL_DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase()
+        );
         Properties properties = new Properties();
-
-        String url = String.format(Constant.DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase());
         properties.put(DruidDataSourceFactory.PROP_URL, url);
         properties.put(DruidDataSourceFactory.PROP_USERNAME, component.getUser());
         properties.put(DruidDataSourceFactory.PROP_PASSWORD, component.getPassword());
@@ -63,8 +72,26 @@ public class DatasourceComponent {
         properties.put(DruidDataSourceFactory.PROP_MAXACTIVE, "10");
         properties.put(DruidDataSourceFactory.PROP_MAXWAIT, "5000");
 
+        DruidDataSource dataSource = (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
+        dataSource.setBreakAfterAcquireFailure(true);
         return (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
-
     }
 
+    private DruidDataSource createOracleDatasource(DatasourceConfigComponent component) throws Exception {
+        String url = String.format(
+                Constant.ORACLE_DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase()
+        );
+        Properties properties = new Properties();
+        properties.put(DruidDataSourceFactory.PROP_URL, url);
+        properties.put(DruidDataSourceFactory.PROP_USERNAME, component.getUser());
+        properties.put(DruidDataSourceFactory.PROP_PASSWORD, component.getPassword());
+        properties.put(DruidDataSourceFactory.PROP_DRIVERCLASSNAME, "oracle.jdbc.driver.OracleDriver");
+        properties.put(DruidDataSourceFactory.PROP_MINIDLE, "5");
+        properties.put(DruidDataSourceFactory.PROP_MAXACTIVE, "10");
+        properties.put(DruidDataSourceFactory.PROP_MAXWAIT, "5000");
+
+        DruidDataSource dataSource = (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
+        dataSource.setBreakAfterAcquireFailure(true);
+        return dataSource;
+    }
 }

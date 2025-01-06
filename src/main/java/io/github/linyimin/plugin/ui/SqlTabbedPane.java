@@ -415,6 +415,7 @@ public class SqlTabbedPane implements TabbedChangeListener {
 
         MybatisSqlConfiguration sqlConfig = project.getService(MybatisSqlStateComponent.class).getConfiguration();
 
+        //TODO
         String explainSql = String.format("explain %s", sqlConfig.getSql());
         SelectResult executeResult = (SelectResult) SqlExecutor.executeSql(project, explainSql, false);
 

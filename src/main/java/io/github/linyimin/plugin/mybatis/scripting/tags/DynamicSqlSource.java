@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.github.linyimin.plugin.component.SqlParamGenerateComponent;
 import io.github.linyimin.plugin.mybatis.mapping.SqlSource;
-import io.github.linyimin.plugin.sql.formatter.MysqlFormatter;
+import io.github.linyimin.plugin.sql.formatter.SqlFormatter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +34,7 @@ public class DynamicSqlSource implements SqlSource {
 
         String sql = parameterize(context.getSql(), context);
 
-        return MysqlFormatter.format(sql);
+        return SqlFormatter.format(sql);
     }
 
     private String parameterize(String preparedStatement, DynamicContext context) {

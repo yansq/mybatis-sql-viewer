@@ -27,20 +27,16 @@ public class DatasourceConfigComponent implements PersistentStateComponent<Datas
 
     @Override
     public @Nullable DatasourceConfig4Save getState() {
-
         if (Objects.isNull(config)) {
-
             config = new DatasourceConfig4Save();
             List<DatasourceConfiguration> configurations = new ArrayList<>();
             config.setCurrent(StringUtils.EMPTY);
             config.setConfigurations(configurations);
-
         }
         return config;
     }
 
     public DatasourceConfiguration getConfig() {
-
         if (this.config == null || this.config.getConfigurations() == null) {
             getState();
         }
@@ -110,6 +106,15 @@ public class DatasourceConfigComponent implements PersistentStateComponent<Datas
         return this.getConfig().getName();
     }
 
+    public String getType() {
+        if (this.getConfig() == null) {
+            return "mysql";
+        }
+        System.out.println(this.getConfig().toString());
+        String type = this.getConfig().getType();
+        return StringUtils.isEmpty(type) ? "mysql" : type;
+    }
+
     public List<String> getAllDatasourceNames() {
         return this.config.getConfigurations().stream().map(DatasourceConfiguration::getName).collect(Collectors.toList());
     }
@@ -119,12 +124,12 @@ public class DatasourceConfigComponent implements PersistentStateComponent<Datas
                 .filter(temp -> StringUtils.equals(this.config.getCurrent(), temp.getName()))
                 .findFirst();
 
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return;
         }
         List<DatasourceConfiguration> configurations = this.config.getConfigurations();
         configurations.remove(optional.get());
-        if (configurations.size() > 0) {
+        if (!configurations.isEmpty()) {
             this.config.setCurrent(configurations.get(0).getName());
         } else {
             this.config.setCurrent(StringUtils.EMPTY);

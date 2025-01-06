@@ -19,7 +19,7 @@ import io.github.linyimin.plugin.mock.generator.DataGeneratorFactory;
 import io.github.linyimin.plugin.mock.schema.Model2Field;
 import io.github.linyimin.plugin.mock.schema.TableField;
 import io.github.linyimin.plugin.sql.executor.SqlExecutor;
-import io.github.linyimin.plugin.sql.formatter.MysqlFormatter;
+import io.github.linyimin.plugin.sql.formatter.SqlFormatter;
 import io.github.linyimin.plugin.sql.parser.SqlParser;
 import io.github.linyimin.plugin.sql.result.BaseResult;
 import io.github.linyimin.plugin.sql.result.SelectResult;
@@ -573,7 +573,7 @@ public class SqlStressTabbedPane {
             this.configTabbedPane.add(this.sqlStressContentPane);
             this.sqlText.setText(sqlConfig.getSql());
             if (result.isSuccess()) {
-                this.sqlTemplateText.setText(MysqlFormatter.format(result.getData()));
+                this.sqlTemplateText.setText(SqlFormatter.format(result.getData()));
             } else {
                 this.sqlTemplateText.setText(result.getErrorMsg());
             }

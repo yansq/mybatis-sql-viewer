@@ -20,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Objects;
 
 public class DatasourceDialog extends JDialog {
     private JPanel contentPane;
@@ -36,6 +37,7 @@ public class DatasourceDialog extends JDialog {
     private JPanel namePanel;
     private JButton addConfiguration;
     private JButton deleteButton;
+    private JComboBox<String> typeBox;
 
     private final JTextField nameText = new JTextField();
     private final JComboBox<String> nameComboBox = new ComboBox<>();
@@ -60,6 +62,7 @@ public class DatasourceDialog extends JDialog {
         host.getDocument().addDocumentListener(new DatasourceChangeListener());
         port.getDocument().addDocumentListener(new DatasourceChangeListener());
         database.getDocument().addDocumentListener(new DatasourceChangeListener());
+        typeBox.addItemListener(new TypeItemListener());
 
         addButtonActionListener();
         addButtonMouseCursorAdapter();
@@ -136,11 +139,15 @@ public class DatasourceDialog extends JDialog {
         user.setText(component.getUser());
         password.setText(component.getPassword());
         database.setText(component.getDatabase());
+        typeBox.setSelectedItem(component.getType());
 
         if (StringUtils.isNotBlank(component.getName())) {
             displayNameComboBox();
-            String urlText = String.format(Constant.DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase());
-            url.setText(urlText);
+            if (component.getType().equalsIgnoreCase("oracle")) {
+                url.setText(String.format(Constant.ORACLE_DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase()));
+            } else {
+                url.setText(String.format(Constant.MYSQL_DATABASE_URL_TEMPLATE, component.getHost(), component.getPort(), component.getDatabase()));
+            }
         } else {
             addDatasource();
         }
@@ -200,7 +207,14 @@ public class DatasourceDialog extends JDialog {
             component.addDatasourceConfiguration(configuration);
         }
 
-        configuration.name(name).host(host.getText()).port(port.getText()).user(user.getText()).password(String.valueOf(password.getPassword())).database(database.getText());
+        configuration
+                .name(name)
+                .host(host.getText())
+                .port(port.getText())
+                .user(user.getText())
+                .password(String.valueOf(password.getPassword()))
+                .database(database.getText())
+                .type((String) typeBox.getSelectedItem());
 
         datasourceComponent.updateDatasource();
 
@@ -227,9 +241,32 @@ public class DatasourceDialog extends JDialog {
             String hostText = host.getText();
             String portText = port.getText();
             String databaseText = database.getText();
-            String urlText = String.format(Constant.DATABASE_URL_TEMPLATE, hostText, portText, databaseText);
+            if (Objects.equals(typeBox.getSelectedItem(), "oracle")) {
+                String urlText = String.format(Constant.ORACLE_DATABASE_URL_TEMPLATE, hostText, portText, databaseText);
+                url.setText(urlText);
+            } else{
+                String urlText = String.format(Constant.MYSQL_DATABASE_URL_TEMPLATE, hostText, portText, databaseText);
+                url.setText(urlText);
+            }
+        }
+    }
 
-            url.setText(urlText);
+    private class TypeItemListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent itemEvent) {
+            if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+                String selectedItem = (String) itemEvent.getItem();
+                String hostText = host.getText();
+                String portText = port.getText();
+                String databaseText = database.getText();
+                String urlText;
+                if (Objects.equals(selectedItem, "oracle")) {
+                    urlText = String.format(Constant.ORACLE_DATABASE_URL_TEMPLATE, hostText, portText, databaseText);
+                } else{
+                    urlText = String.format(Constant.MYSQL_DATABASE_URL_TEMPLATE, hostText, portText, databaseText);
+                }
+                url.setText(urlText);
+            }
         }
     }
 

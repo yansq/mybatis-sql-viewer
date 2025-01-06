@@ -36,7 +36,9 @@ public class Constant {
 
     public static final String APPLICATION_NAME = "mybatis-sql-viewer";
 
-    public static final String DATABASE_URL_TEMPLATE = "jdbc:mysql://%s:%s/%s";
+    public static final String MYSQL_DATABASE_URL_TEMPLATE = "jdbc:mysql://%s:%s/%s";
+
+    public static final String ORACLE_DATABASE_URL_TEMPLATE = "jdbc:oracle:thin:@%s:%s/%s";
 
     public static final int TABLE_ROW_HEIGHT = 20;
 

@@ -12,6 +12,8 @@ public class DatasourceConfiguration {
     private String user;
     private String password;
     private String database;
+    // Database type in lowercase (oracle or mysql)
+    private String type;
 
     public DatasourceConfiguration name(String name) {
         this.name = name;
@@ -40,6 +42,11 @@ public class DatasourceConfiguration {
 
     public DatasourceConfiguration database(String database) {
         this.database = database;
+        return this;
+    }
+
+    public DatasourceConfiguration type(String type) {
+        this.type = type;
         return this;
     }
 
@@ -89,5 +96,25 @@ public class DatasourceConfiguration {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String toString() {
+        return "DatasourceConfiguration{" +
+                "name='" + name + '\'' +
+                ", host='" + host + '\'' +
+                ", port='" + port + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", database='" + database + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

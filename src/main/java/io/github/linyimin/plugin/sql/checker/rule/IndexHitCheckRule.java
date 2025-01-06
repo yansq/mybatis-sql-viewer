@@ -18,10 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 暂时不启用，mysql 与 oracle 的执行计划逻辑不同，待后续开发
  * @author banzhe
  **/
-public class IndexHitCheckRule implements CheckRule {
-    @Override
+// public class IndexHitCheckRule implements CheckRule {
+public class IndexHitCheckRule {
     public Report check(Project project, String target) {
 
         CheckScopeEnum scope = SqlParser.getCheckScope(target);
@@ -29,6 +30,7 @@ public class IndexHitCheckRule implements CheckRule {
             return new Report().isPass(true);
         }
 
+        //TODO oracle: explain plan for
         String explainSql = String.format("EXPLAIN %s", target);
         try {
             SelectResult result = (SelectResult) SqlExecutor.executeSql(project, explainSql, false);
@@ -73,7 +75,6 @@ public class IndexHitCheckRule implements CheckRule {
         return new Report().isPass(true);
     }
 
-    @Override
     public List<CheckScopeEnum> scopes() {
         return Collections.singletonList(CheckScopeEnum.index_hit);
     }

@@ -43,6 +43,7 @@ public class SqlGenerateNavigationHandler implements GutterIconNavigationHandler
 
             activateWindow(mybatisSqlViewerToolWindow);
 
+            // 文件扫描
             if (elt.getParent() instanceof PsiClass || (elt.getParent() instanceof  XmlTag && StringUtils.equals(((XmlTag) elt.getParent()).getName(), Constant.MAPPER))) {
                 String namespace = StringUtils.EMPTY;
                 if (elt.getParent() instanceof PsiClass) {
@@ -55,6 +56,7 @@ public class SqlGenerateNavigationHandler implements GutterIconNavigationHandler
                 }
                 notifyScanIconClick(elt.getProject(), namespace);
             } else {
+                // 生成随机参数
                 SqlParamGenerateComponent.generate(elt, POJO2JSONParserFactory.RANDOM_POJO_2_JSON_PARSER, true);
                 notifyParamChange(elt.getProject());
             }

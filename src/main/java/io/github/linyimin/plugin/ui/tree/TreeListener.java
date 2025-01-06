@@ -163,6 +163,7 @@ public class TreeListener extends MouseAdapter {
         }
 
         try {
+            //TODO
             String explainSql = String.format("explain %s", sqlResult.getData());
             SelectResult executeResult = (SelectResult) SqlExecutor.executeSql(this.mybatisSqlScannerPanel.getProject(), explainSql, false);
 
