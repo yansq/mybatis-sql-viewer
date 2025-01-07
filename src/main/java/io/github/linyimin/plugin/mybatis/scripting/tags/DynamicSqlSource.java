@@ -62,6 +62,11 @@ public class DynamicSqlSource implements SqlSource {
         if (param.contains(",")) {
             realParam = realParam.substring(0, param.lastIndexOf(","));
         }
+        // #{user.username}
+        //TODO 无法处理有多个param，且不同 param 中的变量重名的情况
+        if (param.contains(".")) {
+            realParam = realParam.substring(param.lastIndexOf(".") + 1);
+        }
 
         Object value = context.getBindings().get(realParam);
 
