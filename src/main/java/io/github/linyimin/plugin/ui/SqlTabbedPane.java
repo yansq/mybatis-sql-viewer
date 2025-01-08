@@ -147,6 +147,7 @@ public class SqlTabbedPane implements TabbedChangeListener {
 
         executeInfoText = CustomTextField.createArea("json");
         executeInfoText.setRows(3);
+        executeInfoText.setEditable(false);
 
         RTextScrollPane executeInfoTextScroll = new RTextScrollPane(executeInfoText);
         executeInfoTextScroll.setBorder(LINE_BORDER);
@@ -190,6 +191,7 @@ public class SqlTabbedPane implements TabbedChangeListener {
         statementPanel.add(statementScroll);
 
         statementRuleText = CustomTextField.createArea("sql");
+        statementRuleText.setEditable(false);
 
         statementRulePanel.setLayout(new BorderLayout());
 

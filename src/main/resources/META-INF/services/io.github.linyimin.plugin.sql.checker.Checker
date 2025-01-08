@@ -5,4 +5,4 @@ io.github.linyimin.plugin.sql.checker.FieldChecker
 io.github.linyimin.plugin.sql.checker.FieldCompositionChecker
 io.github.linyimin.plugin.sql.checker.NamingConventionChecker
 io.github.linyimin.plugin.sql.checker.UpdateChecker
-io.github.linyimin.plugin.sql.checker.IndexHitChecker
+#io.github.linyimin.plugin.sql.checker.IndexHitChecker

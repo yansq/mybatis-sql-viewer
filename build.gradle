@@ -9,6 +9,9 @@ plugins {
 group 'org.linyimin'
 version '2.0.2'
 
+compileJava {
+    options.encoding = "UTF-8"
+}
 //sonarqube {
   //properties {
     //property "sonar.projectKey", "linyimin-bupt_mybatis-sql-viewer"
@@ -34,7 +37,7 @@ dependencies {
     implementation group: 'ognl', name: 'ognl', version: '3.0.12'
     implementation group: 'com.alibaba', name: 'druid', version: '1.2.23'
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '3.1.1'
-    implementation 'com.github.vertical-blank:sql-formatter:2.0.3'
+    implementation 'com.github.vertical-blank:sql-formatter:2.0.5'
     implementation 'net.datafaker:datafaker:1.8.1'
     implementation group: 'com.github.mifmif', name: 'generex', version: '1.0.1'
     implementation group: 'com.github.jsqlparser', name: 'jsqlparser', version: '4.5'

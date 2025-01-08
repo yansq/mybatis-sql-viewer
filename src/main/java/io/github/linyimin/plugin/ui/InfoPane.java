@@ -21,6 +21,7 @@ public class InfoPane {
     public InfoPane() {
 
         errorText = CustomTextField.createArea("sql");
+        errorText.setEditable(false);
         RTextScrollPane errorScroll = new RTextScrollPane(errorText);
         errorScroll.setBorder(new EmptyBorder(JBUI.emptyInsets()));
 

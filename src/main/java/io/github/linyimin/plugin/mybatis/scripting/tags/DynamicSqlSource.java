@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.github.linyimin.plugin.mybatis.scripting.tags.ForEachSqlNode.ITEM_PREFIX;
+
 /**
  * @author Clinton Begin
  */
@@ -63,8 +65,8 @@ public class DynamicSqlSource implements SqlSource {
             realParam = realParam.substring(0, param.lastIndexOf(","));
         }
         // #{user.username}
-        //TODO 无法处理有多个param，且不同 param 中的变量重名的情况
-        if (param.contains(".")) {
+        // TODO 无法处理有多个param，且不同 param 中的变量重名的情况
+        if (!param.contains(ITEM_PREFIX) && param.contains(".")) {
             realParam = realParam.substring(param.lastIndexOf(".") + 1);
         }
 
