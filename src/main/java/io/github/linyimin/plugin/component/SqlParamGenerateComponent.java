@@ -22,13 +22,12 @@ import io.github.linyimin.plugin.provider.MapperXmlProcessor;
 import io.github.linyimin.plugin.configuration.model.MybatisSqlConfiguration;
 import io.github.linyimin.plugin.utils.JavaUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static io.github.linyimin.plugin.constant.Constant.MYBATIS_SQL_ANNOTATIONS;
@@ -194,13 +193,17 @@ public class SqlParamGenerateComponent {
 
             String namespace = qualifiedMethod.substring(0, qualifiedMethod.lastIndexOf("."));
 
-            Optional<String> optional = MybatisXmlContentCache.acquireByNamespace(project, namespace).stream().map(XmlTag::getText).findFirst();
+            Optional<String> optional = MybatisXmlContentCache.acquireByNamespace(project, namespace)
+                    .stream()
+                    .map(XmlTag::getText)
+                    .findFirst();
 
-            if (!optional.isPresent()) {
+            if (optional.isEmpty()) {
                 return ProcessResult.fail("Oops! The plugin can't find the mapper file.");
             }
-
-            XMLMapperBuilder builder = new XMLMapperBuilder(new ByteArrayInputStream(optional.get().getBytes(Charsets.toCharset(Charset.defaultCharset()))));
+            // 去除注释，避免中文注释解析问题
+            String mapperString = optional.get().replaceAll("(?s)<!--.*?-->", "");
+            XMLMapperBuilder builder = new XMLMapperBuilder(new ByteArrayInputStream(mapperString.getBytes(StandardCharsets.UTF_8)));
             Map<String, SqlSource> sqlSourceMap = builder.parse();
 
             if (!sqlSourceMap.containsKey(qualifiedMethod)) {
