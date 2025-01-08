@@ -6,6 +6,8 @@ import ognl.OgnlException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Caches OGNL parsed expressions.
@@ -17,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class OgnlCache {
 
     private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
+
+    private static final Pattern TABLE_PREFIX_PATTERN = Pattern.compile("\\b\\w+\\.");
 
     private OgnlCache() {
         // Prevent Instantiation of Static Class
@@ -32,6 +36,8 @@ public final class OgnlCache {
     }
 
     private static Object parseExpression(String expression) throws OgnlException {
+        expression = removeTablePrefix(expression);
+
         Object node = expressionCache.get(expression);
         if (node == null) {
             node = Ognl.parseExpression(expression);
@@ -40,4 +46,8 @@ public final class OgnlCache {
         return node;
     }
 
+    private static String removeTablePrefix(String expression) {
+        Matcher matcher = TABLE_PREFIX_PATTERN.matcher(expression);
+        return matcher.replaceAll("");
+    }
 }
