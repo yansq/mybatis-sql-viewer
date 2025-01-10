@@ -1,7 +1,9 @@
 package io.github.linyimin.plugin.component;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -255,7 +257,17 @@ public class SqlParamGenerateComponent {
             }
         }
 
-        return new GsonBuilder().setPrettyPrinting().create().toJson(params);
+        if (paramNameTypes.size() == 1) {
+            // 当只有一个参数时，使用该参数的变量名包裹.
+            // {name: aaa, age: 17} -> {user: {name: aaa, age: 17}}
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonObject jsonObject = new JsonObject();
+            String parameterName = paramNameTypes.get(0).name;
+            jsonObject.add(parameterName, gson.toJsonTree(params));
+            return gson.toJson(jsonObject);
+        } else {
+            return new GsonBuilder().setPrettyPrinting().create().toJson(params);
+        }
     }
 
     /**
@@ -308,6 +320,11 @@ public class SqlParamGenerateComponent {
 
         public PsiType getPsiType() {
             return this.psiType;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 }

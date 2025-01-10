@@ -1,5 +1,6 @@
 package io.github.linyimin.plugin.mybatis.scripting.tags;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
@@ -30,10 +31,12 @@ public class DynamicContext {
 
     public DynamicContext(List<SqlParamGenerateComponent.ParamNameType> types, Object parameterObject) {
 
+        // 所有的参数映射
         bindings = new ContextMap(types, parameterObject);
 
         if (parameterObject != null) {
-            JSONObject object = JSONObject.parseObject(parameterObject.toString());
+            JSONObject object = JSON.parseObject(parameterObject.toString());
+
             if (object.size() != 1) {
                 return;
             }

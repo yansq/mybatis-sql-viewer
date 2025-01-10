@@ -36,8 +36,6 @@ public final class OgnlCache {
     }
 
     private static Object parseExpression(String expression) throws OgnlException {
-        expression = removeTablePrefix(expression);
-
         Object node = expressionCache.get(expression);
         if (node == null) {
             node = Ognl.parseExpression(expression);

@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.github.linyimin.plugin.mybatis.scripting.tags.ForEachSqlNode.ITEM_PREFIX;
-
 /**
  * @author Clinton Begin
  */
@@ -30,8 +28,10 @@ public class DynamicSqlSource implements SqlSource {
     @Override
     public String getSql(List<SqlParamGenerateComponent.ParamNameType> types, Object parameterObject) {
 
+        // 所有参数的映射
         DynamicContext context = new DynamicContext(types, parameterObject);
 
+        // 验证 tag 条件
         rootSqlNode.apply(context);
 
         String sql = parameterize(context.getSql(), context);
@@ -63,11 +63,6 @@ public class DynamicSqlSource implements SqlSource {
         // #{elementIds, typeHandler=club.linyimin.dao.handler.ListToJsonTypeHandler}
         if (param.contains(",")) {
             realParam = realParam.substring(0, param.lastIndexOf(","));
-        }
-        // #{user.username}
-        // TODO 无法处理有多个param，且不同 param 中的变量重名的情况
-        if (!param.contains(ITEM_PREFIX) && param.contains(".")) {
-            realParam = realParam.substring(param.lastIndexOf(".") + 1);
         }
 
         Object value = context.getBindings().get(realParam);
