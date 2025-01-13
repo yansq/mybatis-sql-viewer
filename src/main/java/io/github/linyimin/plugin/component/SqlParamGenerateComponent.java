@@ -15,6 +15,7 @@ import io.github.linyimin.plugin.cache.MybatisXmlContentCache;
 import io.github.linyimin.plugin.configuration.MybatisSqlStateComponent;
 import io.github.linyimin.plugin.constant.Constant;
 import io.github.linyimin.plugin.mybatis.mapping.SqlSource;
+import io.github.linyimin.plugin.mybatis.type.SimpleTypeRegistry;
 import io.github.linyimin.plugin.mybatis.xml.XMLLanguageDriver;
 import io.github.linyimin.plugin.mybatis.xml.XMLMapperBuilder;
 import io.github.linyimin.plugin.pojo2json.DefaultPOJO2JSONParser;
@@ -257,7 +258,8 @@ public class SqlParamGenerateComponent {
             }
         }
 
-        if (paramNameTypes.size() == 1) {
+        if (paramNameTypes.size() == 1
+                && !SimpleTypeRegistry.isSimpleType(paramNameTypes.get(0).getPsiType().getCanonicalText())) {
             // 当只有一个参数时，使用该参数的变量名包裹.
             // {name: aaa, age: 17} -> {user: {name: aaa, age: 17}}
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
