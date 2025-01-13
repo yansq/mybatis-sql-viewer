@@ -47,6 +47,7 @@ public abstract class POJO2JSONParser {
         specifyTypes.put("ZonedDateTime", new ZonedDateTimeType());
         specifyTypes.put("YearMonth", new YearMonthType());
         specifyTypes.put("UUID", new UUIDType());
+        specifyTypes.put("IPage", new PageType());
     }
 
     protected abstract Object getFakeValue(SpecifyType specifyType);

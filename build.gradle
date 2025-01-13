@@ -6,8 +6,8 @@ plugins {
     //id "jacoco"
 }
 
-group 'org.linyimin'
-version '2.0.2'
+group 'io.yansq'
+version '3.0.0'
 
 compileJava {
     options.encoding = "UTF-8"
@@ -43,6 +43,8 @@ dependencies {
     implementation group: 'com.github.jsqlparser', name: 'jsqlparser', version: '4.5'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.12'
     implementation group: 'jfree', name: 'jfreechart', version: '1.0.13'
+    // https://mvnrepository.com/artifact/com.baomidou/mybatis-plus
+    implementation group: 'com.baomidou', name: 'mybatis-plus', version: '3.5.9'
     //intellijPlatform {
         //intellijIdeaCommunity '2023.3.7'
         //bundledPlugin 'com.intellij.java'
@@ -58,6 +60,14 @@ intellij {
 patchPluginXml {
     sinceBuild = '222.0'
     changeNotes = """
+        <h4>3.0.0</h4>
+        <ul>
+            <li>自3.0.0版本起，该项目自<a href="https://github.com/linyimin0812/mybatis-sql-viewer">mybatis-sql-viewer</a>分叉，在此基础上进行了若干改进和新功能的添加</li>
+            <li>支持 Oracle 数据库（部分功能）</li>
+            <li>支持 MybatisPlus 分页插件</li>
+            <li>修复无法在 XML 中使用变量前缀的问题</li>
+            <li>修复 XML 中有中文注释报错的问题</li>
+        </ul>
         <h4>2.0.2</h4>
         <ul>
             <li>Fixing jump link error</li>

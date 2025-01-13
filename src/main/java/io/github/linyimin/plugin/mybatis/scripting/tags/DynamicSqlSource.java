@@ -1,8 +1,12 @@
 package io.github.linyimin.plugin.mybatis.scripting.tags;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.intellij.openapi.application.ApplicationManager;
 import io.github.linyimin.plugin.component.SqlParamGenerateComponent;
+import io.github.linyimin.plugin.configuration.DatasourceConfigComponent;
 import io.github.linyimin.plugin.mybatis.mapping.SqlSource;
 import io.github.linyimin.plugin.sql.formatter.SqlFormatter;
 
@@ -11,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static io.github.linyimin.plugin.constant.Constant.*;
 
 /**
  * @author Clinton Begin
@@ -35,6 +41,13 @@ public class DynamicSqlSource implements SqlSource {
         rootSqlNode.apply(context);
 
         String sql = parameterize(context.getSql(), context);
+
+        // 包裹分页逻辑
+        Object pageObject = context.getBindings().get(MYBAITS_PLUS_PAGE_KEY);
+        if (pageObject instanceof JSONObject) {
+            Page page = JSON.parseObject(pageObject.toString(), Page.class);
+            sql = warpPageSql(sql, page);
+        }
 
         return SqlFormatter.format(sql);
     }
@@ -95,4 +108,15 @@ public class DynamicSqlSource implements SqlSource {
         return params;
     }
 
+    private String warpPageSql(String sql, Page page) {
+        DatasourceConfigComponent component = ApplicationManager.getApplication()
+                .getComponent(DatasourceConfigComponent.class);
+        String type = component.getType();
+        if ("oracle".equalsIgnoreCase(type)) {
+            return String.format(PAGE_ORACLE, sql,
+                    (page.getCurrent() + 1) * page.getSize(), page.getCurrent() * page.getSize());
+        } else {
+            return String.format(PAGE_MYSQL, sql, (page.getCurrent() - 1) * page.getSize(), page.getSize());
+        }
+    }
 }

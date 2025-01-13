@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>org.linyimin.mybatis-sql-viewer</id>
+    <id>io.yansq.mybatis-sql-viewer</id>
     <name>Mybatis Sql Viewer</name>
-    <vendor email="linyimin520812@gmail.com" url="https://github.com/linyimin0812">linyimin</vendor>
+    <vendor email="felzyan33@gmail.com" url="https://github.com/yansq">yansq</vendor>
 
     <description><![CDATA[
 
@@ -37,7 +37,8 @@
     </ul>
 
     <br/>
-    <a href="https://github.com/linyimin0812/mybatis-sql-viewer">Github</a> Welcome to star(欢迎star)
+    <a href="https://github.com/yansq/mybatis-sql-viewer">Github</a> 欢迎star，
+    该项目fork自<a href="https://github.com/linyimin0812/mybatis-sql-viewer">mybatis-sql-viewer</a>，原作者为<a href="https://github.com/linyimin0812">linyimin0812</a>
     <br/>
     ]]></description>
 

@@ -1,5 +1,6 @@
 package io.github.linyimin.plugin.component;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +34,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static io.github.linyimin.plugin.constant.Constant.MYBAITS_PLUS_PAGE_KEY;
 import static io.github.linyimin.plugin.constant.Constant.MYBATIS_SQL_ANNOTATIONS;
 
 /**
@@ -253,23 +255,27 @@ public class SqlParamGenerateComponent {
 
             if (value instanceof Map && paramNameTypes.size() == 1) {
                 params.putAll((Map) value);
+            } else if (value instanceof Page<?>) {
+                params.put(MYBAITS_PLUS_PAGE_KEY , value);
             } else {
                 params.put(name, value);
             }
         }
 
-        if (paramNameTypes.size() == 1
-                && !SimpleTypeRegistry.isSimpleType(paramNameTypes.get(0).getPsiType().getCanonicalText())) {
-            // 当只有一个参数时，使用该参数的变量名包裹.
-            // {name: aaa, age: 17} -> {user: {name: aaa, age: 17}}
+        if (paramNameTypes.size() == 1) {
+            PsiType type = paramNameTypes.get(0).getPsiType();
+            if (SimpleTypeRegistry.isSimpleType(type.getCanonicalText()) || type instanceof PsiArrayType) {
+                return new GsonBuilder().setPrettyPrinting().create().toJson(params);
+            }
+
+            // 当只有一个 reference 类型参数时，使用该参数的变量名包裹: {name: aaa, age: 17} -> {user: {name: aaa, age: 17}}
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject jsonObject = new JsonObject();
             String parameterName = paramNameTypes.get(0).name;
             jsonObject.add(parameterName, gson.toJsonTree(params));
             return gson.toJson(jsonObject);
-        } else {
-            return new GsonBuilder().setPrettyPrinting().create().toJson(params);
         }
+        return new GsonBuilder().setPrettyPrinting().create().toJson(params);
     }
 
     /**

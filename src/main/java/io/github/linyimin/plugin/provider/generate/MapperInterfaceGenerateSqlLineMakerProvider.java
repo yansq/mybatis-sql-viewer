@@ -10,7 +10,6 @@ import io.github.linyimin.plugin.utils.IconUtils;
 import io.github.linyimin.plugin.utils.JavaUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.Objects;
 
 /**

@@ -58,7 +58,7 @@ public class Constant {
 
     public static String SQL_STATEMENT_LOADING_PROMPT = "Loading SQL Statement...";
 
-    public static final String SOURCE_CODE = "https://github.com/linyimin0812/mybatis-sql-viewer";
+    public static final String SOURCE_CODE = "https://github.com/yansq/mybatis-sql-viewer";
 
 
     public static final List<Report> DEFAULT_INDEX_REPORTS = Arrays.asList(
@@ -115,4 +115,18 @@ public class Constant {
 
     public static final String DATASOURCE_CONNECTED = "Server Connected.";
 
+    public static final String MYBAITS_PLUS_PAGE_KEY = "_IPage";
+
+    public static final String PAGE_ORACLE =
+            "SELECT *\n" +
+            "  FROM (\n" +
+            "  SELECT TMP.*, ROWNUM RN\n" +
+            "FROM (\n" +
+            "  %s\n" +
+            "  ) TMP\n" +
+            "  WHERE ROWNUM <= %s\n" +
+            ")\n" +
+            "WHERE RN > %s";
+
+    public static final String PAGE_MYSQL = "%s limit %s,%s";
 }
