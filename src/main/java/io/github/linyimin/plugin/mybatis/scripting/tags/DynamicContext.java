@@ -112,11 +112,15 @@ public class DynamicContext {
                 value = JSONPath.eval(this, strKey);
             } else if (parameterJSONObject != null && JSONPath.contains(parameterJSONObject, strKey)) {
                 value = JSONPath.eval(parameterJSONObject, strKey);
-            }else if (CollectionUtils.isNotEmpty(this.types) && this.types.size() == 1 && !hasReturned) {
+            } else if (CollectionUtils.isNotEmpty(this.types) && this.types.size() == 1 && !hasReturned) {
                 String clazz = this.types.get(0).getPsiType().getCanonicalText();
                 if (SimpleTypeRegistry.isSimpleType(clazz)) {
                     value = super.get(PARAMETER_OBJECT_KEY);
                 }
+            }
+
+            if (parameterJSONObject != null && value == null) {
+                value = JSONPath.eval(parameterJSONObject, String.format("$..%s[0]", strKey));
             }
             hasReturned = true;
             return value;
