@@ -37,13 +37,22 @@ public class DynamicContext {
         if (parameterObject != null) {
             JSONObject object = JSON.parseObject(parameterObject.toString());
 
+            for (Map.Entry<String, Object> entry : object.entrySet())  {
+                Object value = entry.getValue();
+                if (JSON.isValidArray(value.toString())) {
+                    JSONArray array = JSON.parseArray(value.toString(), Feature.DisableCircularReferenceDetect);
+                    Object[] objArray = array.toArray(new Object[0]);
+                    bindings.put(entry.getKey(), objArray);
+                }
+            }
+
             if (object.size() != 1) {
                 return;
             }
             Collection<Object> values = object.values();
             for (Object value : values) {
-                if (JSONObject.isValidArray(value.toString())) {
-                    JSONArray array = JSONObject.parseArray(value.toString(), Feature.DisableCircularReferenceDetect);
+               if (JSON.isValidArray(value.toString())) {
+                    JSONArray array = JSON.parseArray(value.toString(), Feature.DisableCircularReferenceDetect);
                     bindings.put("collection", array);
                     bindings.put("list", array);
                     bindings.put("array", array);

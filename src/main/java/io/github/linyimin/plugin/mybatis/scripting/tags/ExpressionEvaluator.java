@@ -14,6 +14,7 @@ import java.util.Map;
 public class ExpressionEvaluator {
 
     public boolean evaluateBoolean(String expression, Object parameterObject) {
+        expression = expression.replaceAll("size\\(\\)", "length");
         Object value = OgnlCache.getValue(expression, parameterObject);
         if (value instanceof Boolean) {
             return (Boolean) value;
