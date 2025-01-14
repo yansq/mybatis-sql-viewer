@@ -37,14 +37,7 @@ public class DynamicContext {
         if (parameterObject != null) {
             JSONObject object = JSON.parseObject(parameterObject.toString());
 
-            for (Map.Entry<String, Object> entry : object.entrySet())  {
-                Object value = entry.getValue();
-                if (JSON.isValidArray(value.toString())) {
-                    JSONArray array = JSON.parseArray(value.toString(), Feature.DisableCircularReferenceDetect);
-                    Object[] objArray = array.toArray(new Object[0]);
-                    bindings.put(entry.getKey(), objArray);
-                }
-            }
+            addListBinding(object);
 
             if (object.size() != 1) {
                 return;
@@ -81,6 +74,19 @@ public class DynamicContext {
 
     public int getUniqueNumber() {
         return uniqueNumber++;
+    }
+
+    private void addListBinding(JSONObject jsonObject) {
+        for (Map.Entry<String, Object> entry : jsonObject.entrySet())  {
+            Object value = entry.getValue();
+            if (JSON.isValidArray(value.toString())) {
+                JSONArray array = JSON.parseArray(value.toString(), Feature.DisableCircularReferenceDetect);
+                Object[] objArray = array.toArray(new Object[0]);
+                this.bindings.put(entry.getKey(), Arrays.asList(objArray));
+            } else if (value instanceof JSONObject) {
+                addListBinding((JSONObject) value);
+            }
+        }
     }
 
     static class ContextMap extends HashMap<String, Object> {
