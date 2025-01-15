@@ -113,10 +113,19 @@ public class DynamicSqlSource implements SqlSource {
                 .getComponent(DatasourceConfigComponent.class);
         String type = component.getType();
         if ("oracle".equalsIgnoreCase(type)) {
-            return String.format(PAGE_ORACLE, sql,
-                    (page.getCurrent() + 1) * page.getSize(), page.getCurrent() * page.getSize());
+            return String.format(
+                    PAGE_ORACLE,
+                    sql,
+                    Math.max(1, page.getCurrent()) * page.getSize(),
+                    Math.max(0, page.getCurrent() - 1) * page.getSize()
+            );
         } else {
-            return String.format(PAGE_MYSQL, sql, (page.getCurrent() - 1) * page.getSize(), page.getSize());
+            return String.format(
+                    PAGE_MYSQL,
+                    sql,
+                    Math.max(0, page.getCurrent() - 1) * page.getSize(),
+                    page.getSize()
+            );
         }
     }
 }
