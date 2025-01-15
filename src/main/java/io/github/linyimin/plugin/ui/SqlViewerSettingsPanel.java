@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 
 /**
@@ -22,6 +23,7 @@ public class SqlViewerSettingsPanel implements Configurable, Disposable {
     private JPanel functionalityTitledBorderPanel;
     private JCheckBox fileJumpEnableBox;
     private JPanel myMainPanel;
+    private JFormattedTextField maxRowsReturnedField;
 
     private boolean needRestart = false;
 
@@ -30,7 +32,8 @@ public class SqlViewerSettingsPanel implements Configurable, Disposable {
     }
 
     private void init() {
-
+        assert maxRowsReturnedField != null;
+        ((AbstractDocument)maxRowsReturnedField.getDocument()).setDocumentFilter(new IntegerInputVerifier());
     }
 
     @Override
@@ -46,16 +49,19 @@ public class SqlViewerSettingsPanel implements Configurable, Disposable {
     @Override
     public boolean isModified() {
         SqlViewerSettingsState state = SqlViewerSettingsState.getInstance();
-
-        needRestart = state.fileJumpEnable != fileJumpEnableBox.isSelected();
-
-        return needRestart;
+        if (state.fileJumpEnable != fileJumpEnableBox.isSelected()) {
+            needRestart = true;
+            return true;
+        }
+        String text = maxRowsReturnedField.getText();
+        return !text.isEmpty() && !text.equals(String.valueOf(state.maxRowsReturnedField));
     }
 
     @Override
     public void reset() {
         SqlViewerSettingsState state = SqlViewerSettingsState.getInstance();
         fileJumpEnableBox.setSelected(state.fileJumpEnable);
+        maxRowsReturnedField.setText(String.valueOf(state.maxRowsReturnedField));
     }
 
     @Override
@@ -64,6 +70,7 @@ public class SqlViewerSettingsPanel implements Configurable, Disposable {
         SqlViewerSettingsState state = SqlViewerSettingsState.getInstance();
 
         state.fileJumpEnable = fileJumpEnableBox.isSelected();
+        state.maxRowsReturnedField = Integer.parseInt(maxRowsReturnedField.getText());
 
         if (!needRestart) {
             return;

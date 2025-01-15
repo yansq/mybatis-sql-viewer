@@ -17,6 +17,8 @@ public class SqlViewerSettingsState implements PersistentStateComponent<SqlViewe
 
     public boolean fileJumpEnable = true;
 
+    public int maxRowsReturnedField = 100;
+
     @Override
     public @Nullable SqlViewerSettingsState getState() {
         return this;

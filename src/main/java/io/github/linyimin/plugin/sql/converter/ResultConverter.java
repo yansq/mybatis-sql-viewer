@@ -1,6 +1,7 @@
 package io.github.linyimin.plugin.sql.converter;
 
 import io.github.linyimin.plugin.constant.Constant;
+import io.github.linyimin.plugin.settings.SqlViewerSettingsState;
 import io.github.linyimin.plugin.sql.checker.Report;
 import io.github.linyimin.plugin.sql.checker.enums.CheckScopeEnum;
 import io.github.linyimin.plugin.sql.checker.enums.LevelEnum;
@@ -32,6 +33,9 @@ public class ResultConverter {
 
         ResultSetMetaData metaData = rs.getMetaData();
 
+        SqlViewerSettingsState state = SqlViewerSettingsState.getInstance();
+        int maxRowsReturned = state.maxRowsReturnedField;
+
         // names of columns
         Vector<String> columnNames = new Vector<>();
         int columnCount = metaData.getColumnCount();
@@ -48,8 +52,7 @@ public class ResultConverter {
                 vector.add(rs.getObject(columnIndex));
             }
             data.add(vector);
-            // TODO: 配置项？最大返回记录数
-            if (++count >= 100) {
+            if (++count >= maxRowsReturned) {
                 break;
             }
         }

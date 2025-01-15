@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.yansq'
-version '3.0.0'
+version '3.0.1'
 
 compileJava {
     options.encoding = "UTF-8"
@@ -44,6 +44,10 @@ intellij {
 patchPluginXml {
     sinceBuild = '222.0'
     changeNotes = """
+        <h4>3.0.1</h4>
+        <ul>
+            <li>新增：查询返回最大行数配置项</li>
+        </ul>
         <h4>3.0.0</h4>
         <ul>
             <li>自3.0.0版本起，该项目自<a href="https://github.com/linyimin0812/mybatis-sql-viewer">mybatis-sql-viewer</a>分叉，在此基础上进行了若干改进和新功能的添加</li>
